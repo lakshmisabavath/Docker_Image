@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Build Docker Image'
                 bat '''
-                    docker build -t formappnew .
+                    docker build -t form .
                 '''
             }
         }
@@ -16,7 +16,7 @@ pipeline {
                 echo 'Run application in Docker container'
                 bat '''
                     docker rm -f mycontainer || exit 0
-                    docker run -d -p 5000:5000 --name mycontainer formappnew
+                    docker run -d -p 5000:5000 --name mycontainer form
                 '''
             }
         }
