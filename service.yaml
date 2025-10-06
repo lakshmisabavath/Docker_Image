@@ -4,11 +4,10 @@ metadata:
   name: kubedemoapp-service
 spec:
   selector:
-    app: kuberdemoapp
+    app: kubedemoapp
   ports:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-      nodeport: 30080
-
-  type: Nodeport
+      nodePort: 30080
+  type: NodePort
