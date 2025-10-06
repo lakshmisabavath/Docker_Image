@@ -1,33 +1,38 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Build Docker Image'
-                bat '''
-                    docker build -t form .
-                '''
+pipeline{
+        agent any
+    stages
+    {
+        stage('Build Docker Image'){
+            steps{
+                echo "Build Docker Image"
+                bat "docker build -t kubedemoapp:v1 ."
             }
         }
-
-        stage('Run') {
-            steps {
-                echo 'Run application in Docker container'
-                bat '''
-                    docker rm -f mycontainer || exit 0
-                    docker run -d -p 5000:5000 --name mycontainer form
-                '''
+        stage('Docker Login'){
+            steps{
+                bat 'docker login -u Srujanatangudu4 -p Srujana@2004'
+            }
+        }
+        stage('push Docker Image to Docker Hub'){
+            steps{
+                echo "push Docker Image to Docker Hub"
+                bat "docker tag kubedemoapp:v1 Srujanatangudu4/sample:kubeimage1"
+                bat "docker push Srujanatangudu4/sample:kubeimage1"
+            }
+        }
+        steps('Deploy to Kubernetes'){
+            steps{
+                bat 'kubectl apply -f deployment.yaml --validate=false'
+                bat 'kubectl apply -f service.yaml'
             }
         }
     }
-
     post {
-        failure {
-            echo 'Pipeline failed. please check the logs.'
-        }
         success {
-            echo 'Pipeline executed successfully.'
+            echo 'Successful'
         }
-    }
+        failure {
+            echo 'Unsuccessful'
+        }
+    }
 }
